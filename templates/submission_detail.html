@@ -1,0 +1,108 @@
+{% extends 'header.html' %}
+{% load bootstrap5 %}
+
+{% block title %}
+Report Details
+{% endblock %}
+
+{% block content %}
+<style>
+    .page-wrap {
+        min-height: calc(100vh - 60px); /* Adjust according to your footer's height */
+        display: flex;
+        flex-direction: column;
+    }
+    .content-wrap {
+        flex: 1;
+    }
+    .footer {
+        height: 60px; /* Adjust according to your footer's height */
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #f4f4f4;
+        color: #666;
+        text-align: center;
+        padding: 10px 0;
+    }
+</style>
+<body>
+    <div class="page-wrap">
+        <div class="content-wrap">
+            <div class="container mt-4">
+                <h1>Submission Details</h1>
+                {% if submission.incident_type %}
+                <p><strong>Incident Type:</strong>
+                    {% for incident in submission.get_readable_incident_type %}
+                    {{ incident }}
+                    {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                {% endif %}
+                {% if submission.organizations_involved %}
+                <p><strong>Organizations Involved:</strong> {{ submission.get_organizations_involved_display}}</p>
+                {% endif %}
+                {% if submission.who_was_involved %}
+                <p><strong>Who Was Involved:</strong> {{ submission.who_was_involved }}</p>
+                {% endif %}
+                {% if submission.injuries %}
+                <p><strong>Injuries/Damages Inflicted:</strong> {{ submission.injuries }}</p>
+                {% endif %}
+                {% if submission.date_and_time %}
+                <p><strong>Date and Time:</strong> {{ submission.date_and_time }}</p>
+                {% endif %}
+                {% if submission.additional_info %}
+                <p><strong>Additional Information:</strong> {{ submission.additional_info }}</p>
+                {% endif %}
+                {% if submission.file %}
+                <div class="card">
+                    <div class="card-header" id="fileCollapseHeading">
+                        <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#fileCollapse" aria-expanded="true" aria-controls="fileCollapse">
+                        File
+                        </button>
+                    </div>
+                    <div id="fileCollapse" class="collapse" aria-labelledby="fileCollapseHeading">
+                        <div class="card-body">
+                            <iframe src="{{ file_url }}" width="100%" height="500"></iframe>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if admin %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="submission_id" value="{{ submission.id }}">
+                    <!-- Status dropdown with preloaded value -->
+                    <p>Status:
+                        <select name="status">
+                        <option value="In Progress" {% if status == "In Progress" %} selected {% endif %}>In Progress</option>
+                        <option value="Resolved" {% if status == "Resolved" %} selected {% endif %}>Resolved</option>
+                        </select>
+                    </p>
+                    <!-- Comment input field with preloaded value -->
+                    <p>Comment: <input type="text" name="comment" value="{{ comment }}"></p>
+                    <!-- Submit button -->
+                    <button type="submit" class="btn btn-success">Update Status and Comment</button>
+                </form>
+                <a href="{% url 'list_files' %}" class="btn btn-primary">Back to List of Submissions</a>
+                {% else %}
+                    <p><strong>Status:</strong> {{ status }}</p>
+                    {% if comment %}
+                        <p><strong>Comment:</strong> {{ comment }}</p>
+                    {% endif %}
+                    {% if is_user %}
+                        <form action="{% url 'delete-submission' submission.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Delete This Submission</button>
+                        </form>
+                    {% endif %}
+                    <a href="{% url 'list_files' %}" class="btn btn-primary">Back to List of My Submissions</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="footer">
+            <p>Class project. This system is not monitored, and no real information should be submitted.</p>
+        </div>
+    </div>
+</body>
+{% endblock %}

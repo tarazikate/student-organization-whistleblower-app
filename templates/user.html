@@ -1,0 +1,61 @@
+{% extends 'header.html' %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% load static %}
+{% load socialaccount %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+<style>
+    .page-wrap {
+        min-height: calc(100vh - 60px);
+        display: flex;
+        flex-direction: column;
+    }
+    .content-wrap {
+        flex: 1;
+    }
+    .footer {
+        height: 60px;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #f4f4f4;
+        color: #666;
+        text-align: center;
+        padding: 10px 0;
+    }
+</style>
+<body>
+    <div class="page-wrap">
+        <div class="content-wrap">
+            <h3>User Page</h3>
+            {% if user.is_authenticated %}
+            <p>Welcome, You are logged in as {{ user.username }}</p>
+            <form action="{% url 'file_upload' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Submit Forms</button>
+            </form>
+            <form action="{% url 'view-my-submissions' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">View Previous Reports</button>
+            </form>
+            {% else %}
+            <a href="{% provider_login_url 'google' %}">Login With Google</a>
+            <form action="{% url 'file_upload' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Submit Anonymously</button>
+            </form>
+            {% endif %}
+        </div>
+        <div class="footer">
+            <p>Class project. This system is not monitored, and no real information should be submitted.</p>
+        </div>
+    </div>
+</body>
+{% endblock %}

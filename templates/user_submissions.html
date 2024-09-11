@@ -1,0 +1,67 @@
+{% extends 'header.html' %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% load static %}
+{% load socialaccount %}
+
+{% block title %}
+Report List
+{% endblock %}
+
+{% block content %}
+<style>
+    .page-wrap {
+        min-height: calc(100vh - 60px);
+        display: flex;
+        flex-direction: column;
+    }
+    .content-wrap {
+        flex: 1;
+    }
+    .footer {
+        height: 60px;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #f4f4f4;
+        color: #666;
+        text-align: center;
+        padding: 10px 0;
+    }
+</style>
+<body>
+    <div class="page-wrap">
+        <div class="content-wrap">
+            <div class="container mt-4">
+                <h1>My Submissions</h1>
+                <div class="row">
+                    {% for submission in submissions %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Report by me</h5>
+                                <p>Upload Date: {{ submission.upload_time }}</p>
+                                {% if submission.status %}
+                                <p>Status: {{ submission.status }}</p>
+                                {% endif %}
+                                {% if submission.comment %}
+                                <p>Comment: {{ submission.comment }}</p>
+                                {% endif %}
+                                <a href="{% url 'view-submission' submission.id %}" class="btn btn-primary">View Form</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p>No submissions have been made yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Class project. This system is not monitored, and no real information should be submitted.</p>
+        </div>
+    </div>
+</body>
+{% endblock %}

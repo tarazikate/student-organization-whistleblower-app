@@ -1,0 +1,56 @@
+{% extends 'header.html' %}
+{% load bootstrap5 %}
+
+{% block title %}
+Submission Successful
+{% endblock %}
+
+{% block content %}
+<style>
+    .page-wrap {
+        min-height: calc(100vh - 60px);
+        display: flex;
+        flex-direction: column;
+    }
+    .content-wrap {
+        flex: 1;
+    }
+    .footer {
+        height: 60px;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #f4f4f4;
+        color: #666;
+        text-align: center;
+        padding: 10px 0;
+    }
+</style>
+<html>
+    <body>
+        <div class="page-wrap">
+            <div class="content-wrap">
+                <h1>
+                    You have successfully submitted a report.
+                </h1>
+                <p>You will be able to view status updates on your account</p>
+                <form action="{% url 'view-my-submissions' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Click Here to View Status</button>
+                </form>
+                <form action="{% url 'file_upload' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Submit Another</button>
+                </form>
+                <form action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Home</button>
+                </form>
+            </div>
+            <div class="footer">
+                <p>Class project. This system is not monitored, and no real information should be submitted.</p>
+            </div>
+        </div>
+    </body>
+</html>
+{% endblock %}
